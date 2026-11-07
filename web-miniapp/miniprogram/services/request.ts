@@ -8,6 +8,25 @@ import { logError } from '../utils/log';
 
 let redirecting = false;
 
+/** 免登录接口：它们的 401 是业务失败（如手机号未开通），不是会话过期 */
+const AUTH_FREE_URLS = ['/auth/phone-login', '/auth/wx-login'];
+
+/** 非标准响应摘要：Spring 默认错误页是 JSON 但无 message，网关/代理可能返回 HTML 或空体 */
+const describeResponse = (data: unknown): string => {
+  if (data === null || data === undefined || data === '') {
+    return '空响应体';
+  }
+  if (typeof data === 'string') {
+    return data.slice(0, 120);
+  }
+  try {
+    const text = JSON.stringify(data);
+    return text ? text.slice(0, 200) : '无法序列化的响应体';
+  } catch {
+    return '无法序列化的响应体';
+  }
+};
+
 /** 401 统一入口：清除会话，模块级标志防并发重复 reLaunch */
 export const handleUnauthorized = async (): Promise<void> => {
   clearSession();
@@ -55,35 +74,71 @@ const compactData = (data?: object): object | undefined => {
   return compacted;
 };
 
-export const request = async <T>(options: RequestOptions): Promise<T> => {
-  let response: WechatMiniprogram.RequestSuccessCallbackResult<Result<T>>;
-  try {
-    // 基础库 3.4.10 不传 success/fail 返回 Promise，类型定义仍声明为 RequestTask，故显式断言
-    response = await (wx.request<Result<T>>({
+interface RawResponse {
+  statusCode: number;
+  data: unknown;
+}
+
+/**
+ * 用 success/fail 回调显式封装 wx.request，不依赖「不传回调即返回 Promise」。
+ * 开发者工具热重载（compileHotReLoad + useApiHook）后该行为可能失效而返回 RequestTask，
+ * await 会把 RequestTask 当普通对象直接 resolve，表现为 Network 里请求成功、前端却拿到空响应。
+ */
+const sendRequest = (options: RequestOptions): Promise<RawResponse> =>
+  new Promise((resolve, reject) => {
+    wx.request({
       url: `${API_BASE}${options.url}`,
       method: options.method ?? 'GET',
       data: compactData(options.data),
+      dataType: 'json',
       header: {
         'content-type': 'application/json',
         'fm-token': getToken(),
       },
-    }) as unknown as Promise<WechatMiniprogram.RequestSuccessCallbackResult<Result<T>>>);
+      success: (res) => resolve({ statusCode: res.statusCode, data: res.data as unknown }),
+      fail: (error) => reject(error),
+    });
+  });
+
+/** dataType 未自动解析时 data 可能是字符串，做一次安全的 JSON 解析兜底 */
+const parseResultData = (data: unknown): unknown => {
+  if (typeof data !== 'string' || data.length === 0) {
+    return data;
+  }
+  try {
+    return JSON.parse(data);
+  } catch {
+    return data;
+  }
+};
+
+export const request = async <T>(options: RequestOptions): Promise<T> => {
+  let response: RawResponse;
+  try {
+    response = await sendRequest(options);
   } catch (error) {
     const message = (error as { errMsg?: string }).errMsg || '网络异常';
-    logError('request', error);
+    logError('request', new Error(`${options.url} ${message}`));
     if (!options.silent) {
       wx.showToast({ title: message, icon: 'none' });
     }
     throw new Error(message);
   }
-  const result = response.data;
+  const raw = parseResultData(response.data);
+  const result = typeof raw === 'object' && raw !== null ? raw as Result<T> : undefined;
   if (response.statusCode === 401 || result?.code === 401) {
-    void handleUnauthorized();
+    // 登录接口的 401 是业务失败，交给登录页展示原因；统一重登会重建页面并冲掉错误提示
+    if (!AUTH_FREE_URLS.includes(options.url)) {
+      void handleUnauthorized();
+    }
     throw new Error(result?.message ?? '登录已过期');
   }
   if (!result || result.code !== 0) {
-    const message = result?.message ?? '请求失败';
-    logError('request', new Error(message));
+    const status = response.statusCode;
+    const message = result?.message ?? (status >= 400
+      ? `后端返回 HTTP ${status}，请确认 fm-api 已启动完成且接口地址正确`
+      : '响应格式异常');
+    logError('request', new Error(`${options.url} ${message} [HTTP ${status}] ${describeResponse(raw)}`));
     if (!options.silent) {
       wx.showToast({ title: message, icon: 'none' });
     }

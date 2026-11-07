@@ -3,7 +3,7 @@
  * @date 2026-11-06
  */
 import { fetchInfo, phoneLogin } from '../../services/auth';
-import { getToken, getUser, setToken, setUser } from '../../store/user';
+import { clearSession, getToken, getUser, setToken, setUser } from '../../store/user';
 import { logError } from '../../utils/log';
 
 Page({
@@ -63,6 +63,8 @@ Page({
       }
       wx.switchTab({ url: '/pages/home/index' });
     } catch (error) {
+      // phone-login 成功后 fetchInfo 失败会留下 token 却无 user，重新编译时容易出现半登录态
+      clearSession();
       logError('login.login', error);
       this.setData({ error: error instanceof Error ? error.message : '登录失败，请稍后重试' });
     } finally {
