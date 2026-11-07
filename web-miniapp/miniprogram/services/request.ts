@@ -11,6 +11,28 @@ let redirecting = false;
 /** 免登录接口：它们的 401 是业务失败（如手机号未开通），不是会话过期 */
 const AUTH_FREE_URLS = ['/auth/phone-login', '/auth/wx-login'];
 
+/**
+ * wx.request 失败时给的是英文原始串（如 request:fail timeout），不宜直接展示给用户。
+ * 原始串只写日志，展示与抛出的错误统一用这里的中文文案。
+ */
+const friendlyNetworkError = (errMsg: string): string => {
+  if (/timeout|超时/i.test(errMsg)) {
+    return '请求超时，请稍后重试';
+  }
+  if (/domain|合法域名/i.test(errMsg)) {
+    return '服务地址异常，请联系管理员';
+  }
+  if (/ssl|certificate|hand\s?shake|证书/i.test(errMsg)) {
+    return '安全连接失败，请联系管理员';
+  }
+  return '网络连接失败，请稍后重试';
+};
+
+/** 错误提示停留 2.5 秒，避免中文文案一闪而过 */
+const showError = (message: string): void => {
+  wx.showToast({ title: message, icon: 'none', duration: 2500 });
+};
+
 /** 非标准响应摘要：Spring 默认错误页是 JSON 但无 message，网关/代理可能返回 HTML 或空体 */
 const describeResponse = (data: unknown): string => {
   if (data === null || data === undefined || data === '') {
@@ -117,10 +139,11 @@ export const request = async <T>(options: RequestOptions): Promise<T> => {
   try {
     response = await sendRequest(options);
   } catch (error) {
-    const message = (error as { errMsg?: string }).errMsg || '网络异常';
-    logError('request', new Error(`${options.url} ${message}`));
+    const errMsg = (error as { errMsg?: string } | undefined)?.errMsg ?? '';
+    const message = friendlyNetworkError(errMsg);
+    logError('request', new Error(`${options.url} ${message} [原始: ${errMsg}]`));
     if (!options.silent) {
-      wx.showToast({ title: message, icon: 'none' });
+      showError(message);
     }
     throw new Error(message);
   }
@@ -140,7 +163,7 @@ export const request = async <T>(options: RequestOptions): Promise<T> => {
       : '响应格式异常');
     logError('request', new Error(`${options.url} ${message} [HTTP ${status}] ${describeResponse(raw)}`));
     if (!options.silent) {
-      wx.showToast({ title: message, icon: 'none' });
+      showError(message);
     }
     throw new Error(message);
   }
