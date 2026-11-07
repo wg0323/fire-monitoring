@@ -13,6 +13,7 @@ import com.tngtech.archunit.lang.ArchCondition;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.ConditionEvents;
 import com.tngtech.archunit.lang.SimpleConditionEvent;
+import org.apache.ibatis.annotations.Mapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 架构约束：Controller 文档注解、依赖注入方式与 Controller 依赖边界。
+ * 架构约束：Controller 文档注解、依赖注入方式、Controller 依赖边界与 Mapper 注册。
  */
 class ArchitectureTest {
 
@@ -158,6 +159,28 @@ class ArchitectureTest {
                 .should(haveDocumentedParameters())
                 .because("路径变量/查询参数/请求头缺 @Parameter 时，在线文档无法描述该入参的名称与含义");
         rule.check(classes);
+    }
+
+    @Test
+    void mapperInterfacesMustHaveMapperAnnotation() {
+        ArchRule rule = classes()
+                .that(mapperInterfaces())
+                .should().beAnnotatedWith(Mapper.class)
+                .because("移除 @MapperScan 后由 MyBatis-Plus 扫描 @Mapper 注册 Bean，漏标注解只在启动装配时暴露，"
+                        + "纯单测无法发现");
+        rule.check(classes);
+    }
+
+    /** 只约束 mapper 包内以 Mapper 结尾的接口，避免误伤非 MyBatis 的同名类。 */
+    private static DescribedPredicate<JavaClass> mapperInterfaces() {
+        return new DescribedPredicate<JavaClass>("mapper 包内的 Mapper 接口") {
+            @Override
+            public boolean test(JavaClass clazz) {
+                return clazz.getPackageName().endsWith(".mapper")
+                        && clazz.isInterface()
+                        && clazz.getSimpleName().endsWith("Mapper");
+            }
+        };
     }
 
     private static DescribedPredicate<JavaMethod> mappingMethods() {
