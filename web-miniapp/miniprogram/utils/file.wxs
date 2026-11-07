@@ -1,0 +1,23 @@
+/**
+ * 渲染层图片地址拼接，与 utils/file.ts 的 fileUrl 保持一致。
+ * WXS 只支持 ES5 语法，故使用 var 与字符串拼接。
+ * base 由页面 data 中的 FILE_DATA 注入（唯一来源 config/index.ts），换域名只需改一处。
+ * @date 2026-11-06
+ */
+var fileUrl = function (path, base) {
+  if (!path) {
+    return '';
+  }
+  if (path.indexOf('http://') === 0 || path.indexOf('https://') === 0
+    || path.indexOf('wxfile://') === 0 || path.indexOf('//') === 0) {
+    return path;
+  }
+  if (path.charAt(0) === '/') {
+    return base + path;
+  }
+  return base + '/' + path;
+};
+
+module.exports = {
+  fileUrl: fileUrl,
+};

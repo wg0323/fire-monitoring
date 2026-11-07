@@ -1,0 +1,129 @@
+.page-card {
+  padding: var(--fm-space-5);
+  background: var(--fm-card-bg);
+  border: 1px solid var(--fm-border);
+  border-radius: var(--fm-radius-lg);
+  box-shadow: var(--fm-shadow-card);
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--fm-space-4);
+  margin-bottom: var(--fm-space-4);
+}
+
+.page-title {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 28px;
+}
+
+.page-subtitle {
+  margin-top: var(--fm-space-1);
+  color: var(--fm-text-secondary);
+  font-size: 13px;
+}
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--fm-space-3);
+  padding: var(--fm-space-4);
+  margin-bottom: var(--fm-space-4);
+  background: #f9fafb;
+  border-radius: var(--fm-radius-md);
+}
+
+.filter-bar .filter-actions {
+  display: flex;
+  gap: var(--fm-space-2);
+  margin-left: auto;
+}
+
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--fm-space-3);
+  margin-bottom: var(--fm-space-3);
+}
+
+.pager {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--fm-space-4);
+}
+
+.muted {
+  color: var(--fm-text-muted);
+}
+
+.text-secondary {
+  color: var(--fm-text-secondary);
+}
+
+.number {
+  font-family: var(--fm-font-number);
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  color: var(--fm-text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: var(--fm-radius-sm);
+  cursor: pointer;
+}
+
+.icon-button:hover {
+  background: var(--fm-primary-soft);
+  color: var(--fm-primary);
+}
+
+.empty-block {
+  padding: 48px 0;
+  text-align: center;
+  color: var(--fm-text-muted);
+}
+
+.form-tip {
+  margin-top: var(--fm-space-1);
+  color: var(--fm-text-muted);
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.narrow-tip {
+  display: none;
+}
+
+@media (max-width: 1279px) {
+  .narrow-tip {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: rgb(16 24 40 / 82%);
+    color: #fff;
+    font-size: 16px;
+  }
+}

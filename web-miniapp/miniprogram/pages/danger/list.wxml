@@ -1,0 +1,50 @@
+<view class="fm-page">
+  <view class="list-head">
+    <view>
+      <view class="fm-title">隐患</view>
+      <view class="fm-subtitle">{{roleText}} · 共 {{total}} 条</view>
+    </view>
+    <view class="report-btn" aria-role="button" bindtap="goReport">随手拍</view>
+  </view>
+
+  <scroll-view scroll-x class="tabs" enhanced show-scrollbar="{{false}}">
+    <view
+      wx:for="{{tabs}}"
+      wx:key="value"
+      class="tab {{activeTab === item.value ? 'tab--active' : ''}}"
+      data-value="{{item.value}}"
+      aria-role="button" bindtap="switchTab"
+    >{{item.label}}</view>
+  </scroll-view>
+
+  <view wx:if="{{loading && cards.length === 0}}" class="fm-card">
+    <view class="fm-empty">加载中…</view>
+  </view>
+  <view wx:elif="{{cards.length === 0}}" class="fm-card">
+    <view class="fm-empty">当前页签没有隐患</view>
+  </view>
+
+  <view
+    wx:for="{{cards}}"
+    wx:key="id"
+    class="fm-card danger-card {{item.overdue ? 'danger-card--overdue' : ''}}"
+    data-id="{{item.id}}"
+    aria-role="button" bindtap="openDetail"
+  >
+    <view class="danger-card__head">
+      <text class="fm-tag">{{item.sourceText}}</text>
+      <text class="danger-card__status {{item.statusClass}}">{{item.statusText}}</text>
+    </view>
+    <view class="danger-card__title">{{item.typeText}} · {{item.merchantName}}</view>
+    <view class="danger-card__line {{item.overdue ? 'danger-card__line--overdue' : ''}}">
+      {{item.limitText}}
+    </view>
+    <view class="danger-card__foot">
+      <text class="fm-muted">{{item.timeText}}</text>
+      <text class="fm-muted">{{item.picCount}} 张照片</text>
+    </view>
+  </view>
+
+  <view wx:if="{{loading && cards.length > 0}}" class="fm-empty">加载中…</view>
+  <view wx:elif="{{!hasMore && cards.length > 0}}" class="fm-empty">没有更多了</view>
+</view>

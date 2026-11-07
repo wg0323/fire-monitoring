@@ -1,0 +1,64 @@
+<view class="fm-page">
+  <view class="fm-title">提交巡查结果</view>
+  <view class="fm-subtitle">{{merchantName}}</view>
+
+  <view class="fm-card form-card">
+    <view class="form-block">
+      <text class="form-label">巡查结果</text>
+      <view class="result-choices">
+        <view
+          class="result-choice {{result === 0 ? 'result-choice--active' : ''}}"
+          data-result="0"
+          aria-role="button" bindtap="selectResult"
+        >正常</view>
+        <view
+          class="result-choice {{result === 1 ? 'result-choice--danger' : ''}}"
+          data-result="1"
+          aria-role="button" bindtap="selectResult"
+        >发现隐患</view>
+      </view>
+    </view>
+
+    <block wx:if="{{result === 1}}">
+      <view class="form-block">
+        <text class="form-label">隐患类型（必填）</text>
+        <view class="type-list">
+          <view
+            wx:for="{{types}}"
+            wx:key="code"
+            class="type-item {{dangerType === item.code ? 'type-item--active' : ''}}"
+            data-code="{{item.code}}"
+            aria-role="button" bindtap="selectType"
+          >{{item.name}}</view>
+        </view>
+      </view>
+    </block>
+
+    <view class="form-block">
+      <text class="form-label">{{result === 1 ? '隐患描述（必填）' : '巡查说明'}}</text>
+      <textarea
+        class="form-textarea"
+        value="{{remark}}"
+        placeholder="{{result === 1 ? '描述隐患位置与现象' : '可填写巡查情况'}}"
+        maxlength="255"
+        bindinput="onRemarkInput"
+      />
+    </view>
+
+    <view class="form-block">
+      <text class="form-label">现场照片</text>
+      <fm-photo-picker value="{{pics}}" bind:change="onPicsChange" />
+    </view>
+
+    <view class="form-row">
+      <text class="form-label">定位</text>
+      <text class="form-value {{location ? '' : 'form-value--placeholder'}}" aria-role="button" bindtap="locate">
+        {{location ? '已记录，可点击重新定位' : '点击记录当前位置（可选）'}}
+      </text>
+    </view>
+  </view>
+
+  <button class="fm-btn fm-btn--primary submit-btn" loading="{{submitting}}" aria-role="button" bindtap="submit">
+    提交结果
+  </button>
+</view>

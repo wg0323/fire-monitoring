@@ -1,0 +1,64 @@
+<view class="fm-page">
+  <view wx:if="{{loading && !plan}}" class="fm-empty">加载中…</view>
+  <view wx:elif="{{!plan}}" class="fm-empty">巡查计划不存在</view>
+
+  <block wx:else>
+    <view class="plan-head">
+      <view class="plan-head__line">
+        <text class="fm-title">{{plan.name}}</text>
+        <text class="fm-tag">{{statusText}}</text>
+      </view>
+      <view class="fm-subtitle">{{plan.workAreaName || '-'}} · {{plan.startDate}} 至 {{plan.endDate}}</view>
+      <view class="plan-head__progress">
+        <text class="fm-muted">已巡 {{progressText}}</text>
+        <text class="fm-muted">发现隐患 {{plan.dangerCount}} 处</text>
+      </view>
+    </view>
+
+    <view class="search-row">
+      <input
+        class="search-input"
+        placeholder="搜索商户名称"
+        confirm-type="search"
+        value="{{keyword}}"
+        bindinput="onKeywordInput"
+        bindconfirm="search"
+      />
+      <button class="search-btn" aria-role="button" bindtap="search">查询</button>
+    </view>
+
+    <view class="fm-section-title">
+      <text>工作区商户</text>
+      <text class="fm-muted">共 {{total}} 家</text>
+    </view>
+
+    <view wx:if="{{loading && merchants.length === 0}}" class="fm-card">
+      <view class="fm-empty">加载中…</view>
+    </view>
+    <view wx:elif="{{merchants.length === 0}}" class="fm-card">
+      <view class="fm-empty">{{keyword ? '未找到匹配的商户' : '该工作区暂无商户'}}</view>
+    </view>
+
+    <view
+      wx:for="{{merchants}}"
+      wx:key="id"
+      class="fm-card merchant-card"
+      data-id="{{item.id}}"
+      data-name="{{item.name}}"
+      aria-role="button" bindtap="openSubmit"
+    >
+      <view class="merchant-card__head">
+        <text class="merchant-card__name">{{item.name}}</text>
+        <text class="merchant-card__status {{item.statusClass}}">{{item.statusText}}</text>
+      </view>
+      <view class="fm-muted">{{item.addr}}</view>
+      <view class="merchant-card__foot">
+        <text class="fm-muted">{{item.patrolText}}</text>
+        <text class="merchant-card__link">{{item.statusText === '未巡查' ? '去巡查' : '再次提交'}}</text>
+      </view>
+    </view>
+
+    <view wx:if="{{loading && merchants.length > 0}}" class="list-tip">加载中…</view>
+    <view wx:elif="{{!hasMore && merchants.length > 0}}" class="list-tip">已加载全部 {{total}} 家商户</view>
+  </block>
+</view>

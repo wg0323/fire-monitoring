@@ -1,0 +1,72 @@
+<wxs src="../../utils/file.wxs" module="file" />
+<view class="fm-page order-page">
+  <view wx:if="{{!detail && loading}}" class="fm-empty">加载中…</view>
+  <view wx:elif="{{!detail}}" class="fm-empty">工单不存在</view>
+
+  <block wx:else>
+    <view class="order-head">
+      <view class="order-head__title">{{detail.merchantName}}</view>
+      <view class="order-head__status">{{detail.statusText}}</view>
+      <view class="fm-muted">{{detail.createTimeText}} 派单</view>
+    </view>
+
+    <view class="fm-card">
+      <view class="info-row"><text class="info-label">来源设备</text><text>{{detail.alarmSn}}</text></view>
+      <view class="info-row"><text class="info-label">报警时间</text><text>{{detail.alarmTimeText}}</text></view>
+      <view class="info-row"><text class="info-label">报警结论</text><text>{{detail.alarmResultText}}</text></view>
+      <view class="info-row"><text class="info-label">工作区</text><text>{{detail.workAreaName}}</text></view>
+      <view class="info-row"><text class="info-label">处理人</text><text>{{detail.handlerName}}</text></view>
+      <view class="info-row"><text class="info-label">接单时间</text><text>{{detail.acceptTimeText}}</text></view>
+      <view class="info-row"><text class="info-label">完成时间</text><text>{{detail.finishTimeText}}</text></view>
+      <view class="info-row"><text class="info-label">工单内容</text><text>{{detail.content}}</text></view>
+      <view class="info-row"><text class="info-label">完成说明</text><text>{{detail.finishRemark}}</text></view>
+      <view class="info-row"><text class="info-label">转隐患</text><text>{{detail.dangerText}}</text></view>
+    </view>
+
+    <view wx:if="{{detail.photos.length}}" class="fm-card order-photos">
+      <view class="order-photos__title">完成照片</view>
+      <view class="order-photos__grid">
+        <image
+          wx:for="{{detail.photos}}"
+          wx:key="*this"
+          class="order-photos__item"
+          src="{{file.fileUrl(item, fileBase)}}"
+          mode="aspectFill"
+          data-src="{{item}}"
+          aria-role="button" bindtap="previewPhoto"
+        />
+      </view>
+    </view>
+  </block>
+
+  <view wx:if="{{canAccept}}" class="action-bar">
+    <button class="fm-btn fm-btn--primary" loading="{{submitting}}" aria-role="button" bindtap="accept">接单</button>
+  </view>
+
+  <view wx:if="{{canFinish}}" class="action-bar">
+    <view class="action-bar__hint">选择现场结论后提交，火警报警会同步收口。</view>
+    <view class="action-bar__buttons">
+      <button class="fm-btn" data-result="1" aria-role="button" bindtap="openFinish">真火警</button>
+      <button class="fm-btn fm-btn--ghost" data-result="0" aria-role="button" bindtap="openFinish">误报</button>
+    </view>
+  </view>
+
+  <view wx:if="{{panelVisible}}" class="panel-mask" aria-role="button" bindtap="closePanel">
+    <view class="panel" catchtap="noop">
+      <view class="panel__title">现场结论：{{finishTitle}}</view>
+      <textarea
+        class="panel__textarea"
+        placeholder="处置说明（选填）"
+        maxlength="255"
+        value="{{remark}}"
+        bindinput="onRemarkInput"
+      />
+      <view class="panel__label">现场照片（选填，最多 3 张）</view>
+      <fm-photo-picker value="{{pics}}" bind:change="onPicsChange" />
+      <view class="panel__actions">
+        <button class="fm-btn fm-btn--ghost" aria-role="button" bindtap="closePanel">取消</button>
+        <button class="fm-btn fm-btn--primary" loading="{{submitting}}" aria-role="button" bindtap="submitFinish">提交完成</button>
+      </view>
+    </view>
+  </view>
+</view>

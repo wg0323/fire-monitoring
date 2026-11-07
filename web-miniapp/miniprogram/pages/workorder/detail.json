@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "工单详情",
+  "usingComponents": {
+    "fm-photo-picker": "/components/fm-photo-picker/index"
+  }
+}

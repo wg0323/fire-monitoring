@@ -1,0 +1,92 @@
+.list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24rpx;
+}
+
+.report-btn {
+  padding: 12rpx 24rpx;
+  border-radius: 999rpx;
+  background: var(--fm-accent-soft);
+  color: #9a3412;
+  font-size: 26rpx;
+}
+
+.tabs {
+  display: flex;
+  gap: 16rpx;
+  margin-bottom: 24rpx;
+  white-space: nowrap;
+}
+
+.tab {
+  display: inline-block;
+  padding: 12rpx 28rpx;
+  border-radius: 999rpx;
+  background: var(--fm-card-bg);
+  color: var(--fm-text-secondary);
+  font-size: 26rpx;
+}
+
+.tab--active {
+  background: var(--fm-primary);
+  color: #fff;
+}
+
+.danger-card {
+  margin-bottom: 20rpx;
+}
+
+.danger-card--overdue {
+  border: 1rpx solid var(--fm-danger);
+}
+
+.danger-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.danger-card__status {
+  font-size: 24rpx;
+}
+
+.status-0 {
+  color: var(--fm-text-muted);
+}
+
+.status-1 {
+  color: var(--fm-warning);
+}
+
+.status-2 {
+  color: var(--fm-primary);
+}
+
+.status-3 {
+  color: var(--fm-success);
+}
+
+.danger-card__title {
+  margin-top: 14rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.danger-card__line {
+  margin-top: 8rpx;
+  color: var(--fm-text-secondary);
+  font-size: 26rpx;
+}
+
+.danger-card__line--overdue {
+  color: var(--fm-danger);
+}
+
+.danger-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16rpx;
+}

@@ -1,0 +1,19 @@
+page {
+  --fm-primary: #17395a;
+  --fm-primary-soft: #eaf0f6;
+  --fm-accent: #f26430;
+  --fm-accent-soft: #fff1ea;
+  --fm-danger: #d92d20;
+  --fm-success: #12b76a;
+  --fm-warning: #f79009;
+  --fm-offline: #98a2b3;
+  --fm-page-bg: #f4f6f9;
+  --fm-card-bg: #ffffff;
+  --fm-border: #e4e7ec;
+  --fm-text: #101828;
+  --fm-text-secondary: #475467;
+  --fm-text-muted: #98a2b3;
+  --fm-radius-sm: 12rpx;
+  --fm-radius-md: 20rpx;
+  --fm-radius-lg: 28rpx;
+}

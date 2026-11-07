@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "报警详情",
+  "usingComponents": {
+    "fm-photo-picker": "/components/fm-photo-picker/index",
+    "van-steps": "@vant/weapp/steps/index"
+  }
+}

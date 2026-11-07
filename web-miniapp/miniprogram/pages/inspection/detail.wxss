@@ -1,0 +1,104 @@
+.plan-head {
+  padding: 24rpx 28rpx;
+  margin-bottom: 20rpx;
+  border-radius: var(--fm-radius-md);
+  background: var(--fm-card-bg);
+}
+
+.plan-head__line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.plan-head__progress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16rpx;
+}
+
+.merchant-card {
+  margin-bottom: 20rpx;
+}
+
+.search-row {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 20rpx;
+}
+
+.search-input {
+  flex: 1;
+  height: 80rpx;
+  padding: 0 24rpx;
+  background: var(--fm-card-bg);
+  border-radius: var(--fm-radius-sm);
+  color: var(--fm-text);
+  font-size: 26rpx;
+}
+
+.search-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 128rpx;
+  height: 80rpx;
+  margin: 0;
+  padding: 0;
+  background: var(--fm-primary);
+  border-radius: var(--fm-radius-sm);
+  color: #ffffff;
+  font-size: 26rpx;
+}
+
+.search-btn::after {
+  border: none;
+}
+
+.list-tip {
+  padding: 24rpx 0 40rpx;
+  color: var(--fm-text-muted);
+  font-size: 24rpx;
+  text-align: center;
+}
+
+.merchant-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.merchant-card__name {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.merchant-card__status {
+  font-size: 24rpx;
+}
+
+.patrol-pending {
+  color: var(--fm-text-muted);
+}
+
+.patrol-done {
+  color: var(--fm-success);
+}
+
+.patrol-danger {
+  color: var(--fm-danger);
+}
+
+.merchant-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16rpx;
+}
+
+.merchant-card__link {
+  color: var(--fm-primary);
+  font-size: 26rpx;
+}

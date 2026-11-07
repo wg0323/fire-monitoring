@@ -1,0 +1,76 @@
+.page-head {
+  margin-bottom: 24rpx;
+}
+
+.tabs {
+  display: flex;
+  gap: 12rpx;
+  margin-bottom: 20rpx;
+}
+
+.tab {
+  padding: 10rpx 28rpx;
+  border-radius: 999rpx;
+  background: #ffffff;
+  color: #475467;
+  font-size: 26rpx;
+}
+
+.tab.is-active {
+  background: #17395a;
+  color: #ffffff;
+}
+
+.alarm-card {
+  margin-bottom: 16rpx;
+  border-left: 6rpx solid #98a2b3;
+}
+
+.alarm-card.level-danger {
+  border-left-color: #d92d20;
+}
+
+.alarm-card.level-warning {
+  border-left-color: #f79009;
+}
+
+.alarm-card.level-fault {
+  border-left-color: #f26430;
+}
+
+.alarm-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12rpx;
+}
+
+.alarm-card__merchant {
+  flex: 1;
+  overflow: hidden;
+  font-size: 30rpx;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.alarm-card__line {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 8rpx;
+  color: #475467;
+  font-size: 25rpx;
+}
+
+.alarm-card__level {
+  color: #101828;
+  font-weight: 600;
+}
+
+.alarm-card__foot {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12rpx;
+  color: #98a2b3;
+  font-size: 23rpx;
+}

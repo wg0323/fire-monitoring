@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "随手拍",
+  "usingComponents": {
+    "fm-photo-picker": "/components/fm-photo-picker/index"
+  }
+}

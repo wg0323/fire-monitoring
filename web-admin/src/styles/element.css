@@ -1,0 +1,107 @@
+.el-button {
+  border-radius: var(--fm-radius-md);
+}
+
+.el-button--primary {
+  --el-button-bg-color: var(--fm-primary);
+  --el-button-border-color: var(--fm-primary);
+  --el-button-hover-bg-color: #214c74;
+  --el-button-hover-border-color: #214c74;
+}
+
+.el-input__wrapper,
+.el-select__wrapper,
+.el-textarea__inner {
+  border-radius: var(--fm-radius-sm);
+}
+
+.el-input__wrapper.is-focus,
+.el-select__wrapper.is-focused {
+  box-shadow: 0 0 0 1px var(--fm-primary) inset, 0 0 0 3px rgb(23 57 90 / 12%);
+}
+
+.el-table {
+  --el-table-header-bg-color: #f9fafb;
+  --el-table-header-text-color: #475467;
+  --el-table-row-hover-bg-color: #f9fafb;
+  --el-table-border-color: var(--fm-border);
+  border-radius: var(--fm-radius-md);
+}
+
+.el-table th.el-table__cell {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.el-table .cell {
+  line-height: 22px;
+}
+
+/* 右固定列的不透明背景会遮住相邻列的边框，补齐列间分割线 */
+.el-table--border .el-table__cell.el-table-fixed-column--right {
+  border-right: var(--el-table-border);
+}
+
+.el-table--border .el-table__cell.el-table-fixed-column--right.is-first-column {
+  border-left: var(--el-table-border);
+}
+
+.el-drawer {
+  border-radius: var(--fm-radius-lg) 0 0 var(--fm-radius-lg);
+}
+
+.el-drawer__header {
+  margin-bottom: 0;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--fm-border);
+  color: var(--fm-text);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.el-drawer__body {
+  padding: 20px;
+}
+
+.el-dialog {
+  border-radius: var(--fm-radius-lg);
+}
+
+.el-dialog__header {
+  margin-right: 0;
+  padding-bottom: 12px;
+}
+
+.el-pagination {
+  --el-pagination-button-bg-color: transparent;
+}
+
+.el-pagination.is-background .el-pager li.is-active {
+  background: var(--fm-primary);
+}
+
+.el-form-item__label {
+  color: var(--fm-text);
+}
+
+.el-form-item__error {
+  font-size: 12px;
+}
+
+.el-tag {
+  border-radius: var(--fm-radius-sm);
+}
+
+.el-card {
+  border-radius: var(--fm-radius-lg);
+  border-color: var(--fm-border);
+  box-shadow: var(--fm-shadow-card);
+}
+
+.el-tree {
+  --el-tree-node-hover-bg-color: var(--fm-primary-soft);
+}
+
+.el-menu {
+  border-right: none;
+}

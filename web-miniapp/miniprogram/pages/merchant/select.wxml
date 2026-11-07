@@ -1,0 +1,21 @@
+<view class="fm-page">
+  <view class="select-tip">请选择要进入的门店</view>
+
+  <van-cell-group inset>
+    <van-cell
+      wx:for="{{merchants}}"
+      wx:key="id"
+      title="{{item.name}}"
+      label="{{item.addr || ''}}"
+      value="{{item.id === currentId ? '当前门店' : ''}}"
+      is-link
+      data-id="{{item.id}}"
+      aria-role="button"
+      bind:click="onSelect"
+    />
+  </van-cell-group>
+
+  <view wx:if="{{merchants.length === 0}}" class="fm-muted select-empty">
+    当前账号未关联门店，请联系管理员。
+  </view>
+</view>

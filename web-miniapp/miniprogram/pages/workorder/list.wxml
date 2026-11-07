@@ -1,0 +1,48 @@
+<view class="fm-page">
+  <view class="page-head">
+    <view class="fm-title">我的工单</view>
+    <view class="fm-subtitle">工单由值守派单生成，接单后到场处置并提交结论。</view>
+  </view>
+
+  <view class="tabs">
+    <view
+      wx:for="{{tabs}}"
+      wx:key="key"
+      class="tab {{activeTab === item.key ? 'is-active' : ''}}"
+      data-key="{{item.key}}"
+      aria-role="button" bindtap="switchTab"
+    >
+      {{item.label}}
+    </view>
+  </view>
+
+  <view wx:if="{{loading && orders.length === 0}}" class="fm-card">
+    <view class="fm-empty">加载中…</view>
+  </view>
+  <view wx:elif="{{orders.length === 0}}" class="fm-card">
+    <view class="fm-empty">当前没有工单</view>
+  </view>
+
+  <view wx:for="{{orders}}" wx:key="id" class="fm-card order-card" data-id="{{item.id}}" aria-role="button" bindtap="openDetail">
+    <view class="order-card__head">
+      <text class="order-card__merchant">{{item.merchantName}}</text>
+      <text class="fm-tag {{item.status === 0 ? 'fm-tag--accent' : ''}}">{{item.statusText}}</text>
+    </view>
+    <view class="order-card__line">设备 {{item.alarmSn}} · {{item.workAreaName}}</view>
+    <view class="order-card__line">{{item.title}}</view>
+    <view class="order-card__foot">
+      <text>{{item.timeText}}</text>
+      <view class="order-card__actions">
+        <button
+          wx:if="{{item.status === 0}}"
+          class="mini-btn mini-btn--primary"
+          data-id="{{item.id}}"
+          catchtap="accept"
+        >
+          接单
+        </button>
+        <text class="fm-muted">查看</text>
+      </view>
+    </view>
+  </view>
+</view>

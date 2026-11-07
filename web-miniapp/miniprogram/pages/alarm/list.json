@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "报警",
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "dark",
+  "onReachBottomDistance": 80,
+  "usingComponents": {}
+}

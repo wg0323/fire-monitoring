@@ -1,0 +1,43 @@
+<view class="fm-page">
+  <view class="list-head">
+    <view>
+      <view class="fm-title">巡查</view>
+      <view class="fm-subtitle">只显示所属工作区的计划 · 共 {{total}} 个</view>
+    </view>
+  </view>
+
+  <view wx:if="{{loading && cards.length === 0}}" class="fm-card">
+    <view class="fm-empty">加载中…</view>
+  </view>
+  <view wx:elif="{{cards.length === 0}}" class="fm-card">
+    <view class="fm-empty">暂无巡查计划</view>
+  </view>
+
+  <view
+    wx:for="{{cards}}"
+    wx:key="id"
+    class="fm-card plan-card"
+    data-id="{{item.id}}"
+    aria-role="button" bindtap="openDetail"
+  >
+    <view class="plan-card__head">
+      <text class="plan-card__name">{{item.name}}</text>
+      <text class="plan-card__status {{item.statusClass}}">{{item.statusText}}</text>
+    </view>
+    <view class="plan-card__line">{{item.workAreaName}}</view>
+    <view class="plan-card__line">{{item.dateText}}</view>
+    <view class="plan-card__progress">
+      <view class="progress-bar">
+        <view class="progress-bar__inner" style="width: {{item.percent}}%"></view>
+      </view>
+      <text class="fm-muted">{{item.progressText}}</text>
+    </view>
+    <view class="plan-card__foot">
+      <text class="fm-muted">发现隐患 {{item.dangerCount}} 处</text>
+      <text class="plan-card__link">查看</text>
+    </view>
+  </view>
+
+  <view wx:if="{{loading && cards.length > 0}}" class="fm-empty">加载中…</view>
+  <view wx:elif="{{!hasMore && cards.length > 0}}" class="fm-empty">没有更多了</view>
+</view>

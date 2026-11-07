@@ -1,0 +1,54 @@
+<view class="login-page">
+  <view class="brand">
+    <view class="brand__logo">FM</view>
+    <view class="brand__title">消防监控平台</view>
+    <view class="brand__desc">值守 · 处置 · 巡查，一条闭环</view>
+  </view>
+
+  <view class="login-card">
+    <view class="login-card__title">手机号登录</view>
+    <view class="login-card__desc">仅限已开通的手机号；未开通或重复手机号请联系租户管理员。</view>
+
+    <view wx:if="{{error}}" class="login-error">{{error}}</view>
+
+    <van-button
+      type="primary"
+      block
+      color="#17395A"
+      open-type="getPhoneNumber"
+      loading="{{loading}}"
+      custom-class="login-btn"
+      aria-role="button"
+      aria-label="微信手机号登录"
+      bindgetphonenumber="onGetPhoneNumber"
+    >
+      微信手机号登录
+    </van-button>
+
+    <view wx:if="{{isDev}}" class="dev-block">
+      <view class="dev-block__title">开发环境手机号登录</view>
+      <van-field
+        value="{{phone}}"
+        type="number"
+        maxlength="11"
+        placeholder="输入白名单手机号"
+        bind:change="onPhoneChange"
+      />
+      <van-button
+        plain
+        block
+        color="#17395A"
+        loading="{{loading}}"
+        custom-class="dev-btn"
+        aria-role="button"
+        aria-label="开发环境手机号登录"
+        bind:tap="onDevLogin"
+      >
+        开发登录
+      </van-button>
+      <view class="fm-muted dev-tip">需后端开启 FM_WX_MOCK_LOGIN=true</view>
+    </view>
+
+    <view class="login-card__foot">登录即代表你已获得平台授权</view>
+  </view>
+</view>

@@ -1,0 +1,48 @@
+{
+  "pages": [
+    "pages/login/index",
+    "pages/merchant/select",
+    "pages/home/index",
+    "pages/alarm/list",
+    "pages/alarm/detail",
+    "pages/danger/list",
+    "pages/danger/detail",
+    "pages/danger/report",
+    "pages/inspection/list",
+    "pages/inspection/detail",
+    "pages/inspection/submit",
+    "pages/device/list",
+    "pages/message/list",
+    "pages/workorder/list",
+    "pages/workorder/detail",
+    "pages/mine/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "消防监控平台",
+    "navigationBarBackgroundColor": "#0B1F33",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F4F6F9",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#98A2B3",
+    "selectedColor": "#17395A",
+    "backgroundColor": "#FFFFFF",
+    "list": [
+      { "pagePath": "pages/home/index", "text": "首页" },
+      { "pagePath": "pages/alarm/list", "text": "报警" },
+      { "pagePath": "pages/danger/list", "text": "隐患" },
+      { "pagePath": "pages/inspection/list", "text": "巡查" },
+      { "pagePath": "pages/mine/index", "text": "我的" }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "requiredPrivateInfos": ["getLocation"],
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于巡查打卡、隐患上报时记录现场位置"
+    }
+  }
+}

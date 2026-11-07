@@ -1,0 +1,210 @@
+<wxs src="../../utils/file.wxs" module="file" />
+<view class="fm-page detail-page">
+  <view wx:if="{{loading && !detail}}" class="fm-empty">加载中…</view>
+  <view wx:elif="{{!detail}}" class="fm-empty">隐患不存在</view>
+
+  <block wx:else>
+    <view class="detail-head">
+      <view class="detail-head__line">
+        <text class="fm-tag">{{detail.sourceType === 2 ? '设备故障' : detail.sourceType === 1 ? '巡查' : '随手拍'}}</text>
+        <text class="detail-head__status {{statusClass}}">{{statusText}}</text>
+      </view>
+      <view class="detail-head__merchant">{{detail.dangerType || '隐患'}} · {{detail.merchantName || '-'}}</view>
+      <view class="detail-head__time">{{createTimeText}}</view>
+    </view>
+
+    <view class="fm-card">
+      <view class="info-row">
+        <text class="info-label">等级</text>
+        <text>{{levelText}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">位置</text>
+        <text>{{detail.position || '-'}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">整改期限</text>
+        <text>{{detail.dealLimit || '未设置'}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">责任人</text>
+        <text>{{detail.assigneeName || '-'}}</text>
+      </view>
+      <view class="info-row">
+        <text class="info-label">所属工作区</text>
+        <text>{{detail.workAreaName || '-'}}</text>
+      </view>
+      <view class="info-row info-row--column">
+        <text class="info-label">隐患描述</text>
+        <text class="info-value">{{detail.remark || '-'}}</text>
+      </view>
+    </view>
+
+    <view wx:if="{{pics.length > 0}}" class="fm-card detail-pics">
+      <image
+        wx:for="{{pics}}"
+        wx:key="*this"
+        class="detail-pic"
+        src="{{file.fileUrl(item, fileBase)}}"
+        mode="aspectFill"
+        data-src="{{item}}"
+        aria-role="button" bindtap="previewPic"
+      />
+    </view>
+
+    <view class="fm-section-title">处理时间线</view>
+    <view class="fm-card timeline-card">
+      <view
+        wx:for="{{timeline}}"
+        wx:key="nodeKey"
+        class="timeline-item {{item.occurred ? '' : 'timeline-item--missing'}}"
+      >
+        <view class="timeline-dot {{item.failed ? 'is-failed' : item.occurred ? 'is-done' : ''}}" />
+        <view class="timeline-body">
+          <view class="timeline-head">
+            <text class="timeline-title">{{item.title}}</text>
+            <text wx:if="{{item.extraText}}" class="fm-tag">{{item.extraText}}</text>
+            <text class="fm-muted">{{item.timeText}}</text>
+          </view>
+          <view wx:if="{{item.operator}}" class="timeline-line">操作人：{{item.operator}}</view>
+          <view wx:if="{{item.content}}" class="timeline-line">{{item.content}}</view>
+          <view wx:if="{{item.pics.length > 0}}" class="timeline-pics">
+            <image
+              wx:for="{{item.pics}}"
+              wx:for-item="pic"
+              wx:key="*this"
+              class="timeline-pic"
+              src="{{file.fileUrl(pic, fileBase)}}"
+              mode="aspectFill"
+              data-src="{{pic}}"
+              aria-role="button" bindtap="previewTimelinePic"
+            />
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <block wx:if="{{detail.lastDealRemark || detail.lastDealTime}}">
+      <view class="fm-section-title">整改记录</view>
+      <view class="fm-card">
+        <view class="fm-muted">{{detail.lastDealUserName || '-'}} · {{lastDealTimeText}}</view>
+        <view class="timeline-line">{{detail.lastDealRemark || '-'}}</view>
+      </view>
+    </block>
+
+    <block wx:if="{{detail.auditTime}}">
+      <view class="fm-section-title">审核意见</view>
+      <view class="fm-card">
+        <view class="fm-muted">
+          {{detail.auditResult === 4 ? '驳回' : '通过'}} · {{auditTimeText}}
+        </view>
+        <view class="timeline-line">{{detail.auditRemark || '-'}}</view>
+      </view>
+    </block>
+  </block>
+
+  <view wx:if="{{canDeal || canAssign || canAudit}}" class="action-bar">
+    <view class="action-bar__buttons">
+      <button wx:if="{{canDeal}}" class="fm-btn fm-btn--primary" data-panel="deal" aria-role="button" bindtap="openPanel">
+        提交整改
+      </button>
+      <button wx:if="{{canAssign}}" class="fm-btn fm-btn--primary" data-panel="assign" aria-role="button" bindtap="openPanel">
+        指派外勤
+      </button>
+      <button wx:if="{{canAudit}}" class="fm-btn fm-btn--primary" data-panel="audit" aria-role="button" bindtap="openPanel">
+        审核
+      </button>
+    </view>
+  </view>
+
+  <view wx:if="{{panel}}" class="panel-mask" aria-role="button" bindtap="closePanel">
+    <view class="panel" catchtap="noop">
+      <view class="panel__head">
+        <text class="panel__title">
+          {{panel === 'deal' ? '提交整改' : panel === 'assign' ? '指派外勤' : '隐患审核'}}
+        </text>
+        <text class="panel__close" aria-role="button" bindtap="closePanel">×</text>
+      </view>
+
+      <block wx:if="{{panel === 'deal'}}">
+        <view class="panel__label">整改说明（必填）</view>
+        <textarea
+          class="panel__textarea"
+          value="{{dealRemark}}"
+          placeholder="说明整改措施与结果"
+          maxlength="200"
+          data-field="dealRemark"
+          bindinput="onRemarkInput"
+        />
+        <view class="panel__label">整改照片</view>
+        <fm-photo-picker value="{{dealPics}}" bind:change="onDealPicsChange" />
+        <view class="panel__row">
+          <text class="fm-muted">{{dealLocation ? '已记录定位' : '可选：记录整改位置'}}</text>
+          <text class="panel__link" aria-role="button" bindtap="locate">定位</text>
+        </view>
+        <button class="fm-btn fm-btn--primary panel__submit" loading="{{submitting}}" aria-role="button" bindtap="submitDeal">
+          提交审核
+        </button>
+      </block>
+
+      <block wx:if="{{panel === 'assign'}}">
+        <view class="panel__label">外勤（工作区成员）</view>
+        <picker
+          mode="selector"
+          range="{{assignees}}"
+          range-key="name"
+          value="{{assigneeIndex}}"
+          bindchange="onAssigneeChange"
+        >
+          <view class="panel__picker">
+            {{assigneeIndex >= 0 ? assignees[assigneeIndex].name : '请选择外勤'}}
+          </view>
+        </picker>
+        <view class="panel__label">整改期限</view>
+        <picker mode="date" value="{{assignDeadline}}" bindchange="onDeadlineChange">
+          <view class="panel__picker">{{assignDeadline || '选择日期'}}</view>
+        </picker>
+        <view class="panel__label">说明</view>
+        <textarea
+          class="panel__textarea"
+          value="{{assignRemark}}"
+          placeholder="可填写指派说明"
+          maxlength="200"
+          data-field="assignRemark"
+          bindinput="onRemarkInput"
+        />
+        <button class="fm-btn fm-btn--primary panel__submit" loading="{{submitting}}" aria-role="button" bindtap="submitAssign">
+          确认指派
+        </button>
+      </block>
+
+      <block wx:if="{{panel === 'audit'}}">
+        <view class="panel__label">审核结论</view>
+        <view class="audit-choices">
+          <view
+            class="audit-choice {{auditResult === 1 ? 'audit-choice--active' : ''}}"
+            data-result="1"
+            aria-role="button" bindtap="setAuditResult"
+          >通过</view>
+          <view
+            class="audit-choice {{auditResult === 4 ? 'audit-choice--danger' : ''}}"
+            data-result="4"
+            aria-role="button" bindtap="setAuditResult"
+          >驳回</view>
+        </view>
+        <view class="panel__label">审核意见{{auditResult === 4 ? '（必填）' : ''}}</view>
+        <textarea
+          class="panel__textarea"
+          value="{{auditRemark}}"
+          placeholder="{{auditResult === 4 ? '说明驳回原因' : '可填写审核意见'}}"
+          maxlength="300"
+          data-field="auditRemark"
+          bindinput="onRemarkInput"
+        />
+        <button class="fm-btn fm-btn--primary panel__submit" loading="{{submitting}}" aria-role="button" bindtap="submitAudit">
+          提交审核
+        </button>
+      </block>
+    </view>
+  </view>
+</view>

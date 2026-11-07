@@ -1,0 +1,14 @@
+<view class="tab-bar">
+  <view
+    wx:for="{{tabs}}"
+    wx:key="key"
+    class="tab-item {{selected === index ? 'is-active' : ''}}"
+    data-index="{{index}}"
+    bindtap="onTap"
+    aria-role="tab"
+    aria-selected="{{selected === index}}"
+  >
+    <view class="tab-item__icon fm-icon fm-icon--{{item.key}}" />
+    <text class="tab-item__text">{{item.text}}</text>
+  </view>
+</view>

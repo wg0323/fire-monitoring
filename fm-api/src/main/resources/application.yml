@@ -1,0 +1,106 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: fm-api
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 15MB
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST:192.168.1.20}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:fm_p1}?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:123456}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 5000
+  redis:
+    host: ${REDIS_HOST:192.168.1.20}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:123456}
+    database: 0
+    timeout: 3000
+  jackson:
+    time-zone: Asia/Shanghai
+  rabbitmq:
+    host: ${RABBITMQ_HOST:192.168.1.20}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:admin}
+    password: ${RABBITMQ_PASSWORD:123456}
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    listener:
+      simple:
+        acknowledge-mode: manual
+        prefetch: 1
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      id-type: assign_id
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: when-authorized
+
+sa-token:
+  token-name: fm-token
+  timeout: 2592000
+  is-concurrent: true
+  is-share: false
+  token-style: uuid
+  is-read-cookie: false
+
+fm:
+  callback:
+    token: ${FM_CALLBACK_TOKEN:fm-dev-callback}
+  call:
+    mock: ${FM_CALL_MOCK:false}
+  minio:
+    endpoint: ${MINIO_ENDPOINT:http://192.168.1.20:9000}
+    access-key: ${MINIO_ACCESS_KEY:SYXbEkNEa0rrRkOJiu1B}
+    secret-key: ${MINIO_SECRET_KEY:2bSziWSpUOu42aMGIvJu2KOKzgu2n22OB3K2Y2Xy}
+    bucket: ${MINIO_BUCKET:fm-files}
+    public-url: ${MINIO_PUBLIC_URL:}
+  wx:
+    miniapp:
+      app-id: ${WX_MA_APP_ID:}
+      app-secret: ${WX_MA_SECRET:}
+      mock-login-enabled: ${FM_WX_MOCK_LOGIN:true}
+      subscribe:
+        alarm-template-id: ${WX_MA_ALARM_TEMPLATE_ID:}
+        danger-template-id: ${WX_MA_DANGER_TEMPLATE_ID:}
+        state: ${WX_MA_SUBSCRIBE_STATE:developer}
+  sms:
+    key: ${JUHE_SMS_KEY:}
+    tpl-id: ${JUHE_SMS_TPL_ID:}
+    url: ${JUHE_SMS_URL:http://v.juhe.cn/sms/send}
+
+knife4j:
+  enable: true
+  production: ${KNIFE4J_PRODUCTION:false}
+  setting:
+    language: zh_cn
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+  packages-to-scan: com.fm.module
+
+logging:
+  level:
+    com.fm: info

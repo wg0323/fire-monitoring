@@ -1,0 +1,52 @@
+.fm-photo-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.fm-photo {
+  position: relative;
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: var(--fm-radius-sm);
+  overflow: hidden;
+}
+
+.fm-photo__image {
+  width: 100%;
+  height: 100%;
+}
+
+.fm-photo__remove {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 44rpx;
+  height: 44rpx;
+  line-height: 40rpx;
+  border-bottom-left-radius: 12rpx;
+  background: rgb(16 24 40 / 60%);
+  color: #fff;
+  font-size: 30rpx;
+  text-align: center;
+}
+
+.fm-photo--add {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1rpx dashed var(--fm-border);
+  background: #f9fafb;
+  color: var(--fm-text-muted);
+}
+
+.fm-photo__plus {
+  font-size: 44rpx;
+  line-height: 1;
+}
+
+.fm-photo__hint {
+  margin-top: 8rpx;
+  font-size: 22rpx;
+}

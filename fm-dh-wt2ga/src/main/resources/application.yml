@@ -1,0 +1,34 @@
+server:
+  port: ${CTWING_PUSH_PORT:9092}
+  servlet:
+    context-path: ${CTWING_PUSH_CONTEXT:/fm-dh-wt2ga}
+    encoding:
+      charset: UTF-8
+      force: true
+
+spring:
+  application:
+    name: fm-dh-wt2ga
+  redis:
+    host: ${REDIS_HOST:192.168.1.20}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:123456}
+  rabbitmq:
+    host: ${RABBITMQ_HOST:192.168.1.20}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:admin}
+    password: ${RABBITMQ_PASSWORD:123456}
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    template:
+      mandatory: true
+
+ctwing:
+  push:
+    callback-path: /callback
+
+fm:
+  registry:
+    refresh-interval-ms: ${FM_REGISTRY_REFRESH_MS:60000}
+    device-type: dh-wt2ga
+  raw-log-enabled: ${FM_RAW_LOG:true}

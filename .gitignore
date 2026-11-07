@@ -1,0 +1,42 @@
+# 白名单：只有下列顶层路径进入 git，其余一律不入库
+/*
+!/fm-api/
+!/fm-common/
+!/fm-dh-wt2ga/
+!/fm-parent/
+!/web-admin/
+!/web-miniapp/
+!/pom.xml
+!/assets/
+!.gitignore
+
+# Java / Maven 编译产物与运行日志
+target/
+*.class
+*.jar
+*.war
+*.dump
+*.log
+logs/
+
+# 前端 / 小程序依赖与构建产物
+node_modules/
+dist/
+miniprogram_npm/
+.vite/
+*.tsbuildinfo
+.eslintcache
+
+# IDE 与系统文件
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+
+# 本地私有配置（可能含凭据）
+.env.local
+.env.*.local
+application-local.yml
+web-miniapp/project.private.config.json
+uploads/

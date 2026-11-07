@@ -1,0 +1,58 @@
+{
+  "services": [
+    {
+      "identifier": "temperature_state",
+      "serviceName": "温度监测状态报警"
+    },
+    {
+      "identifier": "remove_report",
+      "serviceName": "设备拆除报警"
+    },
+    {
+      "identifier": "fault_code_report",
+      "serviceName": "异常告警上报"
+    },
+    {
+      "identifier": "temperature_report",
+      "serviceName": "温度报警上报"
+    },
+    {
+      "identifier": "devicepara_report",
+      "serviceName": "设备参数上报"
+    },
+    {
+      "identifier": "signal_report",
+      "serviceName": "信号数据上报"
+    },
+    {
+      "identifier": "operation_report",
+      "serviceName": "操作上报"
+    },
+    {
+      "identifier": "register_report",
+      "serviceName": "注册上报"
+    }
+  ],
+  "enums": {
+    "temperature_state": {
+      "0": "正常",
+      "1": "温度异常告警"
+    },
+    "tamper_alarm": {
+      "0": "设备装上",
+      "1": "拆除报警"
+    },
+    "fault": {
+      "5": "温度传感器故障",
+      "7": "低压故障",
+      "8": "低压故障解除"
+    },
+    "operation": {
+      "1": "自检",
+      "2": "屏蔽",
+      "3": "解除屏蔽",
+      "4": "上电复位",
+      "5": "消音"
+    }
+  }
+}

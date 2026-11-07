@@ -1,0 +1,1 @@
+{"timestamp":1791138556229,"tenantId":"2000509630","serviceId":"temperature_state","protocol":"mqtt","productId":"17321036","messageType":"eventReport","eventType":2,"eventContent":{"temperature_value":40.599998474121094,"temperature_state":1,"serviceid":1004},"deviceSn":"864852062800536","deviceId":"99014977864852062800536","IMSI":"","IMEI":""}

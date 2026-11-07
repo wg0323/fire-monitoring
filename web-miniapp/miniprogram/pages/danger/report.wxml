@@ -1,0 +1,81 @@
+<view class="fm-page">
+  <view class="fm-title">随手拍</view>
+  <view class="fm-subtitle">提交后直接指派给商户整改，进入待审核前可补充说明。</view>
+
+  <view class="fm-card form-card">
+    <view class="form-row" aria-role="button" bindtap="openMerchantPanel">
+      <text class="form-label">商户</text>
+      <text class="form-value {{selectedMerchant ? '' : 'form-value--placeholder'}}">
+        {{selectedMerchant ? selectedMerchant.name : '请选择商户'}}
+      </text>
+    </view>
+
+    <view class="form-block">
+      <text class="form-label">隐患类型</text>
+      <view class="type-list">
+        <view
+          wx:for="{{types}}"
+          wx:key="code"
+          class="type-item {{selectedType === item.code ? 'type-item--active' : ''}}"
+          data-code="{{item.code}}"
+          aria-role="button" bindtap="selectType"
+        >{{item.name}}</view>
+      </view>
+    </view>
+
+    <view class="form-block">
+      <text class="form-label">隐患描述</text>
+      <textarea
+        class="form-textarea"
+        value="{{remark}}"
+        placeholder="描述隐患位置、现象与风险"
+        maxlength="255"
+        bindinput="onRemarkInput"
+      />
+    </view>
+
+    <view class="form-block">
+      <text class="form-label">现场照片</text>
+      <fm-photo-picker value="{{pics}}" bind:change="onPicsChange" />
+    </view>
+
+    <view class="form-row">
+      <text class="form-label">定位</text>
+      <text class="form-value {{location ? '' : 'form-value--placeholder'}}" aria-role="button" bindtap="locate">
+        {{location ? '已记录，可点击重新定位' : '点击记录当前位置（可选）'}}
+      </text>
+    </view>
+  </view>
+
+  <button class="fm-btn fm-btn--primary submit-btn" loading="{{submitting}}" aria-role="button" bindtap="submit">
+    提交给商户
+  </button>
+
+  <view wx:if="{{merchantPanel}}" class="panel-mask" aria-role="button" bindtap="closeMerchantPanel">
+    <view class="panel" catchtap="noop">
+      <view class="panel__head">
+        <text class="panel__title">选择商户</text>
+        <text class="panel__close" aria-role="button" bindtap="closeMerchantPanel">×</text>
+      </view>
+      <input
+        class="panel__search"
+        value="{{merchantKeyword}}"
+        placeholder="搜索商户名称"
+        bindinput="onMerchantSearch"
+      />
+      <scroll-view scroll-y class="merchant-list">
+        <view
+          wx:for="{{merchants}}"
+          wx:key="id"
+          class="merchant-item"
+          data-id="{{item.id}}"
+          aria-role="button" bindtap="selectMerchant"
+        >
+          <view class="merchant-item__name">{{item.name}}</view>
+          <view class="fm-muted">{{item.addr || '-'}}</view>
+        </view>
+        <view wx:if="{{merchants.length === 0}}" class="fm-empty">没有可选商户</view>
+      </scroll-view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,60 @@
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  margin-bottom: 32rpx;
+  padding: 32rpx;
+  background:
+    radial-gradient(circle at 85% 20%, rgb(242 100 48 / 16%), transparent 45%),
+    #0b1f33;
+  border-radius: 20rpx;
+  color: #e6f1ff;
+}
+
+.profile__avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 96rpx;
+  height: 96rpx;
+  border: 1rpx solid rgb(56 189 248 / 36%);
+  border-radius: 50%;
+  background: rgb(255 255 255 / 8%);
+  color: #22d3ee;
+  font-size: 36rpx;
+  font-weight: 700;
+}
+
+.profile__name {
+  font-size: 36rpx;
+  font-weight: 600;
+}
+
+.profile__meta {
+  margin-top: 6rpx;
+  color: #9fb3c8;
+  font-size: 24rpx;
+}
+
+van-cell-group {
+  --cell-group-inset-padding: 0;
+}
+
+.mine-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  margin-top: 40rpx;
+}
+
+.mine-btn {
+  height: 88rpx !important;
+  border-radius: 16rpx !important;
+  font-size: 30rpx !important;
+}
+
+.mine-foot {
+  margin-top: 32rpx;
+  line-height: 38rpx;
+  text-align: center;
+}

@@ -1,0 +1,10 @@
+.select-tip {
+  padding: 24rpx 40rpx 16rpx;
+  font-size: 26rpx;
+  color: #667085;
+}
+
+.select-empty {
+  padding: 48rpx 40rpx;
+  text-align: center;
+}

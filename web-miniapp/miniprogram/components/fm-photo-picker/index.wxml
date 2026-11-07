@@ -1,0 +1,32 @@
+<wxs src="../../utils/file.wxs" module="file" />
+<view class="fm-photo-picker">
+  <view wx:for="{{photos}}" wx:key="*this" class="fm-photo">
+    <image
+      class="fm-photo__image"
+      src="{{file.fileUrl(item, fileBase)}}"
+      mode="aspectFill"
+      data-index="{{index}}"
+      bindtap="preview"
+      aria-role="button"
+      aria-label="预览第 {{index + 1}} 张照片"
+    />
+    <view
+      wx:if="{{!disabled}}"
+      class="fm-photo__remove"
+      data-index="{{index}}"
+      catchtap="remove"
+      aria-role="button"
+      aria-label="删除第 {{index + 1}} 张照片"
+    >×</view>
+  </view>
+  <view
+    wx:if="{{!disabled && photos.length < max}}"
+    class="fm-photo fm-photo--add"
+    bindtap="choose"
+    aria-role="button"
+    aria-label="添加照片"
+  >
+    <text class="fm-photo__plus">{{uploading ? '…' : '+'}}</text>
+    <text class="fm-photo__hint">{{uploading ? '上传中' : '照片'}}</text>
+  </view>
+</view>

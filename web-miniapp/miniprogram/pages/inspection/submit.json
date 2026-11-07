@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "提交巡查",
+  "usingComponents": {
+    "fm-photo-picker": "/components/fm-photo-picker/index"
+  }
+}

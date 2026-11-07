@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#17395a" stroke-opacity="0.04" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="1000" fill="#ffffff"/>
+  <rect width="1600" height="1000" fill="url(#grid)"/>
+  <rect x="60" y="60" width="1480" height="880" fill="#f7f9fc" stroke="#94a3b8" stroke-width="8"/>
+  <rect x="60" y="60" width="1480" height="120" fill="#eef3f8" stroke="#94a3b8" stroke-width="4"/>
+  <text x="92" y="132" font-family="Microsoft YaHei, sans-serif" font-size="30" fill="#64748b">一层大厅</text>
+  <rect x="60" y="180" width="1480" height="90" fill="#fff7ed" stroke="#f97316" stroke-width="3" stroke-dasharray="12 8"/>
+  <text x="92" y="236" font-family="Microsoft YaHei, sans-serif" font-size="26" fill="#c2410c">疏散通道</text>
+  <rect x="60" y="270" width="420" height="300" fill="#ffffff" stroke="#94a3b8" stroke-width="4"/>
+  <text x="92" y="330" font-family="Microsoft YaHei, sans-serif" font-size="26" fill="#475569">办公室 A</text>
+  <rect x="480" y="270" width="420" height="300" fill="#ffffff" stroke="#94a3b8" stroke-width="4"/>
+  <text x="512" y="330" font-family="Microsoft YaHei, sans-serif" font-size="26" fill="#475569">办公室 B</text>
+  <rect x="900" y="270" width="300" height="300" fill="#ffffff" stroke="#94a3b8" stroke-width="4"/>
+  <text x="932" y="330" font-family="Microsoft YaHei, sans-serif" font-size="26" fill="#475569">会议室</text>
+  <rect x="1200" y="270" width="340" height="300" fill="#ffffff" stroke="#94a3b8" stroke-width="4"/>
+  <text x="1232" y="330" font-family="Microsoft YaHei, sans-serif" font-size="26" fill="#475569">配电间</text>
+  <rect x="60" y="570" width="300" height="370" fill="#ffffff" stroke="#94a3b8" stroke-width="4"/>
+  <text x="92" y="630" font-family="Microsoft YaHei, sans-serif" font-size="26" fill="#475569">消防泵房</text>
+  <rect x="360" y="570" width="540" height="370" fill="#ffffff" stroke="#94a3b8" stroke-width="4"/>
+  <text x="392" y="630" font-family="Microsoft YaHei, sans-serif" font-size="26" fill="#475569">员工办公区</text>
+  <rect x="900" y="570" width="300" height="370" fill="#ffffff" stroke="#94a3b8" stroke-width="4"/>
+  <text x="932" y="630" font-family="Microsoft YaHei, sans-serif" font-size="26" fill="#475569">仓库</text>
+  <rect x="1200" y="570" width="340" height="370" fill="#ffffff" stroke="#94a3b8" stroke-width="4"/>
+  <text x="1232" y="630" font-family="Microsoft YaHei, sans-serif" font-size="26" fill="#475569">楼梯间</text>
+  <rect x="1500" y="60" width="40" height="880" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
+  <text x="720" y="960" font-family="Microsoft YaHei, sans-serif" font-size="22" fill="#94a3b8">演示平面图 · 1600 × 1000</text>
+</svg>

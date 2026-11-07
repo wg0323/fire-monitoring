@@ -1,0 +1,36 @@
+<view class="fm-page">
+  <view class="profile">
+    <view class="profile__avatar">{{avatar}}</view>
+    <view class="profile__body">
+      <view class="profile__name">{{user.realName || ''}}</view>
+      <view class="profile__meta">{{roleText}} · {{user.phone || '-'}}</view>
+    </view>
+  </view>
+
+  <van-cell-group inset>
+    <van-cell title="运营中心" value="{{user.tenantName || '-'}}" />
+    <van-cell title="工作区" value="{{workAreaText || '-'}}" />
+    <van-cell wx:if="{{user.merchantName}}" title="所属商户" value="{{user.merchantName}}" />
+    <van-cell wx:if="{{showMerchantSwitch}}" title="切换门店" is-link aria-role="button" bind:click="onSwitchMerchant" />
+    <van-cell title="登录账号" value="{{user.userName || '-'}}" />
+    <van-cell title="数据范围" value="{{user.dataScope || '-'}}" />
+  </van-cell-group>
+
+  <van-cell-group inset>
+    <van-cell title="消息" is-link aria-role="button" bind:click="onMessages" />
+    <van-cell title="订阅消息授权" is-link aria-role="button" bind:click="onSubscribe" />
+  </van-cell-group>
+
+  <view class="mine-actions">
+    <van-button block plain color="#17395A" custom-class="mine-btn" aria-role="button" bind:tap="onClearCache">
+      清除缓存
+    </van-button>
+    <van-button block color="#D92D20" custom-class="mine-btn" aria-role="button" bind:tap="onLogout">
+      退出登录
+    </van-button>
+  </view>
+
+  <view class="fm-muted mine-foot">
+    订阅消息一次授权只能推送一条，发送后需重新授权。
+  </view>
+</view>

@@ -1,0 +1,105 @@
+<view class="home-page">
+  <view class="home-hero">
+    <view class="home-hero__main">
+      <view class="home-hero__greeting">{{greeting}}，{{user.realName || ''}}</view>
+      <view class="home-hero__meta">
+        <text class="home-hero__tag">{{roleText}}</text>
+        <text wx:if="{{user.tenantName}}" class="home-hero__tag">{{user.tenantName}}</text>
+        <text wx:if="{{user.merchantName}}" class="home-hero__tag">{{user.merchantName}}</text>
+        <text wx:if="{{workAreaText}}" class="home-hero__tag">{{workAreaText}}</text>
+      </view>
+    </view>
+    <view class="home-hero__bell" aria-role="button" bindtap="goMessages">
+      <text class="home-hero__bell-text">消息</text>
+      <view wx:if="{{unreadCount > 0}}" class="home-hero__badge">{{unreadCount}}</view>
+    </view>
+  </view>
+
+  <view class="home-stats">
+    <view class="fm-stat-grid">
+      <view class="fm-stat" aria-role="button" bindtap="goAlarm">
+        <view class="fm-stat__value">{{summary.alarmCount}}</view>
+        <view class="fm-stat__label">未处理报警</view>
+      </view>
+      <view class="fm-stat" aria-role="button" bindtap="goDangerList">
+        <view class="fm-stat__value">{{summary.dangerCount}}</view>
+        <view class="fm-stat__label">未完成隐患</view>
+      </view>
+      <view class="fm-stat">
+        <view class="fm-stat__value">{{summary.deviceCount}}</view>
+        <view class="fm-stat__label">接入设备</view>
+      </view>
+      <view class="fm-stat">
+        <view class="fm-stat__value">{{summary.offlineCount}}</view>
+        <view class="fm-stat__label">离线设备</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="home-body">
+    <view class="fm-section-title">快捷入口</view>
+    <view class="fm-quick-grid">
+      <view class="fm-quick" aria-role="button" bindtap="goReport">
+        <view class="fm-quick__icon"><view class="fm-icon fm-icon--shoot" /></view>
+        <text>随手拍</text>
+      </view>
+      <view wx:if="{{!isMerchant}}" class="fm-quick" aria-role="button" bindtap="goWorkOrder">
+        <view class="fm-quick__icon fm-quick__icon--badged">
+          <view class="fm-icon fm-icon--workorder" />
+          <view wx:if="{{summary.workOrderCount > 0}}" class="fm-quick__badge">{{summary.workOrderCount}}</view>
+        </view>
+        <text>我的工单</text>
+      </view>
+      <view wx:if="{{!isMerchant}}" class="fm-quick" aria-role="button" bindtap="goInspection">
+        <view class="fm-quick__icon fm-quick__icon--badged">
+          <view class="fm-icon fm-icon--inspection" />
+          <view wx:if="{{summary.inspectionCount > 0}}" class="fm-quick__badge">{{summary.inspectionCount}}</view>
+        </view>
+        <text>巡查</text>
+      </view>
+      <view class="fm-quick" aria-role="button" bindtap="goDevices">
+        <view class="fm-quick__icon"><view class="fm-icon fm-icon--device" /></view>
+        <text>设备</text>
+      </view>
+    </view>
+
+    <view class="fm-section-title">
+      <text>最新报警</text>
+      <text class="fm-muted" aria-role="button" bindtap="goAlarm">查看全部</text>
+    </view>
+
+    <view wx:if="{{loading && latestAlarms.length === 0}}" class="fm-card">
+      <view class="fm-empty">加载中…</view>
+    </view>
+    <view wx:elif="{{latestAlarms.length === 0}}" class="fm-card">
+      <view class="fm-empty">当前没有未处理报警</view>
+    </view>
+    <view
+      wx:for="{{latestAlarms}}"
+      wx:key="id"
+      class="fm-card alarm-brief {{item.levelClass}}"
+      data-id="{{item.id}}"
+      aria-role="button" bindtap="openAlarm"
+    >
+      <view class="alarm-brief__head">
+        <text class="alarm-brief__level">{{item.levelText}}</text>
+        <text class="alarm-brief__merchant">{{item.merchantName}}</text>
+        <text wx:if="{{item.pendingReview}}" class="fm-tag fm-tag--accent">待复核</text>
+      </view>
+      <view class="alarm-brief__line">设备 {{item.sn}} · {{item.position}}</view>
+      <view class="alarm-brief__time">{{item.timeText}} · 查看</view>
+    </view>
+
+    <view class="fm-section-title">
+      <text>最新隐患</text>
+      <text class="fm-muted" aria-role="button" bindtap="goDangerList">查看全部</text>
+    </view>
+    <view class="fm-card">
+      <view wx:if="{{summary.latestDangers.length === 0}}" class="fm-empty">当前没有未完成隐患</view>
+      <view wx:for="{{summary.latestDangers}}" wx:key="id" class="danger-brief" data-id="{{item.id}}" aria-role="button" bindtap="openDanger">
+        <text class="danger-brief__remark">{{item.remark || '隐患'}}</text>
+        <text class="fm-muted">{{item.merchantName || ''}}</text>
+      </view>
+    </view>
+  </view>
+</view>

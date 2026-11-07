@@ -1,0 +1,23 @@
+package com.fm.module.system.dto;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+
+/**
+ * 登录日志查询。
+ */
+@Schema(description = "登录日志查询")
+@Data
+public class LoginLogQueryDTO {
+
+    @Schema(description = "页码，从 1 开始")
+    private long pageNum = 1;
+    @Schema(description = "每页条数")
+    private long pageSize = 10;
+    @Schema(description = "模糊搜索关键字")
+    private String keyword;
+    @Schema(description = "用户类型")
+    private String userType;
+    @Schema(description = "登录结果")
+    private Integer loginResult;
+}

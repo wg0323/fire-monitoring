@@ -1,0 +1,55 @@
+<view class="fm-page">
+  <view class="page-head">
+    <view class="fm-title">设备</view>
+    <view class="fm-subtitle">按当前账号数据范围展示接入设备，支持按在线状态筛选。</view>
+  </view>
+
+  <view class="search-row">
+    <input
+      class="search-input"
+      placeholder="设备编号 / 名称 / 位置"
+      confirm-type="search"
+      value="{{keyword}}"
+      bindinput="onKeywordInput"
+      bindconfirm="search"
+    />
+    <button class="search-btn" aria-role="button" bindtap="search">查询</button>
+  </view>
+
+  <view class="tabs">
+    <view
+      wx:for="{{tabs}}"
+      wx:key="key"
+      class="tab {{activeTab === item.key ? 'is-active' : ''}}"
+      data-key="{{item.key}}"
+      aria-role="button" bindtap="switchTab"
+    >
+      {{item.label}}
+    </view>
+  </view>
+
+  <view class="summary">共 {{total}} 台设备</view>
+
+  <view wx:if="{{loading && devices.length === 0}}" class="fm-card">
+    <view class="fm-empty">加载中…</view>
+  </view>
+  <view wx:elif="{{devices.length === 0}}" class="fm-card">
+    <view class="fm-empty">当前没有设备</view>
+  </view>
+
+  <view wx:for="{{devices}}" wx:key="id" class="fm-card device-card">
+    <view class="device-card__head">
+      <text class="device-card__name">{{item.name}}</text>
+      <text class="fm-tag {{item.online ? 'fm-tag--online' : 'fm-tag--offline'}}">{{item.onlineText}}</text>
+    </view>
+    <view class="device-card__line">{{item.typeText}} · {{item.merchantName}}</view>
+    <view class="device-card__line">位置：{{item.position}}</view>
+    <view class="device-card__foot">
+      <text>{{item.sn}}</text>
+      <text>最后通讯 {{item.lastTimeText}}</text>
+    </view>
+  </view>
+
+  <view wx:if="{{loading && devices.length > 0}}" class="list-tip">加载中…</view>
+  <view wx:elif="{{!hasMore && devices.length > 0}}" class="list-tip">已加载全部 {{total}} 台设备</view>
+</view>
