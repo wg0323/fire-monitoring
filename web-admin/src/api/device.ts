@@ -45,6 +45,8 @@ export interface DevicePayload {
   activeDate?: string | null;
   installDate?: string | null;
   status: number;
+  /** 类型独有字段（AEP 凭证、视频账号等），JSON 字符串原样落库 */
+  fExt?: string;
 }
 
 export interface BuildingPayload {

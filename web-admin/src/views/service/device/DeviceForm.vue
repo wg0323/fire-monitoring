@@ -1,6 +1,6 @@
 <template>
-  <el-drawer v-model="drawerVisible" :title="device ? '编辑设备' : '新增设备'" size="480px" destroy-on-close>
-    <el-form label-width="96px" class="device-form">
+  <el-drawer v-model="drawerVisible" :title="device ? '编辑设备' : '新增设备'" size="640px" destroy-on-close>
+    <el-form label-width="112px" class="device-form">
       <div class="form-section">基本信息</div>
       <el-form-item label="设备编号" required>
         <el-input
@@ -14,7 +14,12 @@
         <el-input v-model="form.name" maxlength="64" placeholder="请输入设备名称" />
       </el-form-item>
       <el-form-item label="设备类型" required>
-        <el-select v-model="form.type" placeholder="请选择设备类型" style="width: 100%">
+        <el-select
+          v-model="form.type"
+          placeholder="请选择设备类型"
+          style="width: 100%"
+          @change="handleTypeChange"
+        >
           <el-option
             v-for="item in activeTypes"
             :key="item.code"
@@ -50,6 +55,39 @@
           />
         </el-select>
       </el-form-item>
+
+      <template v-if="fieldGroup === 'aep'">
+        <div class="form-section">接入参数</div>
+        <el-form-item label="AEP 设备 ID" required>
+          <el-input v-model="form.aepId" maxlength="64" placeholder="天翼物联网平台设备 ID" />
+        </el-form-item>
+        <el-form-item label="AEP 密钥" required>
+          <el-input
+            v-model="form.aepKey"
+            maxlength="128"
+            show-password
+            placeholder="天翼物联网平台设备密钥"
+          />
+        </el-form-item>
+        <div class="form-tip field-tip">该类型设备经天翼物联网平台接入，凭证缺失将无法解析上报数据。</div>
+      </template>
+      <template v-else-if="fieldGroup === 'video'">
+        <div class="form-section">接入参数</div>
+        <el-form-item label="设备用户名" required>
+          <el-input v-model="form.username" maxlength="64" placeholder="采集程序登录设备时使用" />
+        </el-form-item>
+        <el-form-item label="设备密码" required>
+          <el-input
+            v-model="form.password"
+            maxlength="64"
+            show-password
+            placeholder="采集程序登录设备时使用"
+          />
+        </el-form-item>
+        <div class="form-tip field-tip">
+          通道数、登录句柄、IP 端口、抓图地址、在线状态等由采集程序回写，无需手工填写。
+        </div>
+      </template>
 
       <div class="form-section">定位</div>
       <el-form-item label="定位方式" required>
@@ -135,9 +173,9 @@
       <el-form-item label="4G 卡号">
         <el-input v-model="form.cardNo" maxlength="24" />
       </el-form-item>
-      <el-form-item label="通道数">
-        <el-input-number v-model="form.channelNum" :min="1" :max="255" controls-position="right" />
-      </el-form-item>
+      <div v-if="fieldGroup === 'electric'" class="form-tip field-tip">
+        电压、电流、温度、剩余电流、报警浓度由设备上报，新增时无需填写。
+      </div>
       <el-form-item label="激活日期">
         <el-date-picker
           v-model="form.activeDate"
@@ -189,6 +227,7 @@ import type {
 } from '@/types/api';
 import type { MapPick } from '@/components/map/types';
 import FmMap from '@/components/map/FmMap.vue';
+import { resolveFieldGroup } from './deviceTypeFields';
 
 interface DeviceFormState {
   sn: string;
@@ -206,10 +245,13 @@ interface DeviceFormState {
   floorY: number | null;
   sim: string;
   cardNo: string;
-  channelNum: number;
   activeDate: string | null;
   installDate: string | null;
   status: number;
+  aepId: string;
+  aepKey: string;
+  username: string;
+  password: string;
 }
 
 const props = defineProps<{
@@ -231,6 +273,8 @@ const buildings = ref<BuildingItem[]>([]);
 const floors = ref<FloorItem[]>([]);
 const form = reactive<DeviceFormState>(emptyForm());
 let initialFloorId: string | null = null;
+/** 编辑时保留采集程序回写的 f_ext 字段，提交时只覆盖本表单负责的键。 */
+let extCache: Record<string, unknown> = {};
 
 const drawerVisible = computed({
   get: () => props.visible,
@@ -239,6 +283,10 @@ const drawerVisible = computed({
 
 const activeTypes = computed(() => props.deviceTypes.filter((item) => item.status === 1));
 const activeMakers = computed(() => props.makers.filter((item) => item.status === 1));
+const fieldGroup = computed(() => {
+  const matched = props.deviceTypes.find((item) => item.code === form.type);
+  return resolveFieldGroup(form.type, matched?.name);
+});
 const pickValue = computed(() => {
   if (form.lng === null || form.lat === null) {
     return null;
@@ -272,10 +320,13 @@ function emptyForm(): DeviceFormState {
     floorY: null,
     sim: '',
     cardNo: '',
-    channelNum: 1,
     activeDate: null,
     installDate: null,
     status: 1,
+    aepId: '',
+    aepKey: '',
+    username: '',
+    password: '',
   };
 }
 
@@ -284,6 +335,7 @@ async function fillForm(): Promise<void> {
   buildings.value = [];
   floors.value = [];
   initialFloorId = null;
+  extCache = {};
   if (!props.device) {
     return;
   }
@@ -303,11 +355,15 @@ async function fillForm(): Promise<void> {
     floorY: props.device.floorY ?? null,
     sim: props.device.sim ?? '',
     cardNo: props.device.cardNo ?? '',
-    channelNum: props.device.channelNum ?? 1,
     activeDate: props.device.activeDate ?? null,
     installDate: props.device.installDate ?? null,
     status: props.device.status ?? 1,
   });
+  extCache = parseFExt(props.device.fExt);
+  form.aepId = extText(extCache.aepId);
+  form.aepKey = extText(extCache.aepKey);
+  form.username = extText(extCache.username);
+  form.password = extText(extCache.password);
   initialFloorId = form.floorId;
   if (form.merchantId) {
     await loadBuildings(form.merchantId);
@@ -380,6 +436,65 @@ function handleLocationTypeChange(): void {
   }
 }
 
+/** 切换设备类型时清掉不适用的接入凭证，避免把 AEP / 视频账号写进别的类型。 */
+function handleTypeChange(): void {
+  if (fieldGroup.value !== 'aep') {
+    form.aepId = '';
+    form.aepKey = '';
+  }
+  if (fieldGroup.value !== 'video') {
+    form.username = '';
+    form.password = '';
+  }
+}
+
+function parseFExt(raw?: string | null): Record<string, unknown> {
+  if (!raw) {
+    return {};
+  }
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed)
+      ? (parsed as Record<string, unknown>)
+      : {};
+  } catch {
+    return {};
+  }
+}
+
+function extText(value: unknown): string {
+  if (value === null || value === undefined) {
+    return '';
+  }
+  return typeof value === 'string' ? value : String(value);
+}
+
+/**
+ * f_ext 交给后端原样落库：只覆盖表单负责的键，采集程序回写的字段（登录句柄、
+ * 通道数、IP 端口、抓图地址等）在编辑时必须保留。
+ */
+function buildFExt(): string | undefined {
+  const ext: Record<string, unknown> = { ...extCache };
+  const group = fieldGroup.value;
+  if (group !== 'unknown') {
+    delete ext.aepId;
+    delete ext.aepKey;
+    delete ext.username;
+    delete ext.password;
+    if (group === 'aep') {
+      ext.aepId = form.aepId.trim();
+      ext.aepKey = form.aepKey.trim();
+    } else if (group === 'video') {
+      ext.username = form.username.trim();
+      ext.password = form.password;
+    }
+  }
+  if (!Object.keys(ext).length) {
+    return props.device ? '{}' : undefined;
+  }
+  return JSON.stringify(ext);
+}
+
 function handlePick(pick: MapPick): void {
   form.lng = Number(pick.lng.toFixed(6));
   form.lat = Number(pick.lat.toFixed(6));
@@ -398,6 +513,26 @@ function validate(): boolean {
   if (!form.type) {
     ElMessage.warning('请选择设备类型');
     return false;
+  }
+  if (fieldGroup.value === 'aep') {
+    if (!form.aepId.trim()) {
+      ElMessage.warning('请填写 AEP 设备 ID');
+      return false;
+    }
+    if (!form.aepKey.trim()) {
+      ElMessage.warning('请填写 AEP 密钥');
+      return false;
+    }
+  }
+  if (fieldGroup.value === 'video') {
+    if (!form.username.trim()) {
+      ElMessage.warning('请填写设备用户名');
+      return false;
+    }
+    if (!form.password) {
+      ElMessage.warning('请填写设备密码');
+      return false;
+    }
   }
   if (form.locationType === 1 && (form.lng === null || form.lat === null)) {
     ElMessage.warning('GPS 定位必须填写经纬度');
@@ -448,10 +583,10 @@ function buildPayload(): DevicePayload {
     floorY: form.locationType === 2 ? form.floorY : null,
     sim: form.sim.trim() || undefined,
     cardNo: form.cardNo.trim() || undefined,
-    channelNum: form.channelNum,
     activeDate: form.activeDate,
     installDate: form.installDate,
     status: form.status,
+    fExt: buildFExt(),
   };
 }
 </script>
@@ -459,6 +594,10 @@ function buildPayload(): DevicePayload {
 <style scoped>
 .device-form {
   padding-bottom: 24px;
+}
+
+.device-form :deep(.el-form-item__label) {
+  white-space: nowrap;
 }
 
 .form-section {
@@ -482,6 +621,10 @@ function buildPayload(): DevicePayload {
 }
 
 .floor-tip {
-  padding-left: 96px;
+  padding-left: 112px;
+}
+
+.field-tip {
+  padding-left: 112px;
 }
 </style>
